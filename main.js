@@ -86,19 +86,19 @@ function activateListener() {
 									clone.onload = () => {
 										img.style.display = "none";
 									};
-									gsap.to( text, {
+									gsap.to(text, {
 										opacity: "1",
 										duration: 0.3,
 										ease: "power1.in",
 									});
-									gsap.to(text.querySelector('.desc'), {
+									gsap.to(text.querySelector(".desc"), {
 										delay: 0.1,
 										duration: 0.5,
 										opacity: "var(--max-opacity)",
 										ease: "power1.in",
 										transform: "translateY(0)",
 									});
-									gsap.to(text.querySelector('.exit'), {
+									gsap.to(text.querySelector(".exit"), {
 										delay: 0.3,
 										duration: 0.4,
 										opacity: "var(--max-opacity)",
@@ -130,29 +130,39 @@ function activateListener() {
 	});
 }
 
+var loadNum = 0;
+
+function imgLoad() {
+	loadNum += 1;
+	if (loadNum == imgs.length) {
+		displayActive = false;
+		activateListener();
+		let magicPage = document.querySelector(".magic-page");
+		magicPage.querySelector(".waiter").style.opacity = "0";
+		gsap.to(magicPage, {
+			duration: 0.6,
+			ease: "power2.in",
+			transform: "translateX(calc(-100vw - 200px))",
+			onComplete: () => {
+				magicPage.style.transform = "translateX(calc(100vw + 200px))";
+			},
+		});
+	}
+}
+
 function transition() {
 	let magicPage = document.querySelector(".magic-page");
 	gsap.to(magicPage, {
 		duration: 0.6,
-		transform: 'translateX(0)',
-		ease: 'power2.out',
+		transform: "translateX(0)",
+		ease: "power2.out",
 		onComplete: () => {
-			document.querySelector("#main").innerHTML = template;	
-			
-			displayActive = false;
-			activateListener();
-
-			gsap.to(magicPage, {
-				duration: 0.6,
-				delay: 0.3,
-				ease: 'power2.in',
-				transform: 'translateX(calc(-100vw - 200px))',
-				onComplete: () => {
-					magicPage.style.transform = 'translateX(calc(100vw + 200px))';
-				}
-			});
-
-		}
+			magicPage.querySelector(".waiter").style.opacity = "0.7";
+			loadNum = 0;
+			let newData = template;
+			newData = newData.replace(/<img/g, '<img onload="imgLoad()"');
+			document.querySelector("#main").innerHTML = newData;
+		},
 	});
 }
 
