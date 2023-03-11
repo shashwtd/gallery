@@ -1,4 +1,5 @@
 var displayActive = false;
+var template;
 var imgs;
 
 function em(n = 1) {
@@ -17,6 +18,7 @@ function activateListener() {
 	imgs = document.querySelectorAll(".img");
 	imgs.forEach((img) => {
 		img.addEventListener("mouseenter", (e) => {
+			console.log("image hovered: " + img.src);
 			if (displayActive) return;
 			var notImg = Array.from(imgs).filter((elm) => elm != img);
 			gsap.to(notImg, {
@@ -32,6 +34,8 @@ function activateListener() {
 		});
 
 		img.addEventListener("mouseleave", (e) => {
+			img.removeEventListener("click", (e) => {});
+			console.log("image left: " + img.src);
 			if (displayActive) return;
 			gsap.to(imgs, {
 				width: "3em",
@@ -42,6 +46,7 @@ function activateListener() {
 		});
 
 		img.addEventListener("click", (e) => {
+			console.log("image clicked: " + img.src);
 			if (displayActive) return;
 			displayActive = true;
 
@@ -61,6 +66,7 @@ function activateListener() {
 						zIndex: 20,
 						onComplete: () => {
 							var pagee = document.querySelector(".page");
+							var text = pagee.querySelector(".content .text");
 							gsap.to(img, {
 								top:
 									window.innerHeight / 2 -
@@ -80,10 +86,24 @@ function activateListener() {
 									clone.onload = () => {
 										img.style.display = "none";
 									};
-									gsap.to( pagee.querySelector(".content .text"), {
+									gsap.to( text, {
 										opacity: "1",
 										duration: 0.3,
 										ease: "power1.in",
+									});
+									gsap.to(text.querySelector('.desc'), {
+										delay: 0.1,
+										duration: 0.5,
+										opacity: "var(--max-opacity)",
+										ease: "power1.in",
+										transform: "translateY(0)",
+									});
+									gsap.to(text.querySelector('.exit'), {
+										delay: 0.3,
+										duration: 0.4,
+										opacity: "var(--max-opacity)",
+										ease: "power1.in",
+										transform: "translateY(0)",
 									});
 								},
 							});
@@ -110,6 +130,32 @@ function activateListener() {
 	});
 }
 
+function transition() {
+	let magicPage = document.querySelector(".magic-page");
+	gsap.to(magicPage, {
+		duration: 0.6,
+		transform: 'translateX(0)',
+		ease: 'power2.out',
+		onComplete: () => {
+			document.querySelector("#main").innerHTML = template;	
+			
+			displayActive = false;
+			activateListener();
+
+			gsap.to(magicPage, {
+				duration: 0.6,
+				delay: 0.3,
+				ease: 'power2.in',
+				transform: 'translateX(calc(-100vw - 200px))',
+				onComplete: () => {
+					magicPage.style.transform = 'translateX(calc(100vw + 200px))';
+				}
+			});
+
+		}
+	});
+}
+
 function setSize() {
 	var imgs = document.querySelectorAll(".img");
 	imgs.forEach((img) => {
@@ -124,6 +170,7 @@ function setSize() {
 
 window.onload = () => {
 	setSize();
+	template = document.querySelector("#main").innerHTML;
 
 	// const lenis = new Lenis({
 	// 	duration: 1.2,
