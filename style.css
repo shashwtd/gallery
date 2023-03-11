@@ -149,7 +149,7 @@ main {
 	color: var(--secondary);
 	display: flex;
 	align-items: center;
-	opacity: 0.6;
+	opacity: 0;
 	transition: opacity 0.3s ease 0.3s;
 }
 
