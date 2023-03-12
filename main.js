@@ -191,18 +191,17 @@ var counting = setInterval(function () {
 		t = 99 - n,
 		i = document.getElementById("loader-progress");
 	(e.innerHTML = ++n),
-		n > 89 &&
-			((e.innerHTML = 90),
-			window.jQuery &&
-				((e.innerHTML = 95),
-				"interactive" == document.readyState && (e.innerHTML = 99),
-				"complete" == document.readyState &&
-					(clearInterval(counting),
-					(e.innerHTML = 100),
-					jQuery("body").toggleClass("page-loaded"),
-					setTimeout(function () {
-						jQuery("nav").css("visibility", "visible");
-					}, 880)))),
-		(i.style.transition = "0.15s"),
-		(i.style.width = t + "%");
-}, 20);
+	  n > 89 &&
+		((e.innerHTML = 90),
+		"interactive" === document.readyState && (e.innerHTML = 99),
+		"complete" === document.readyState &&
+		  (clearInterval(counting),
+		  (e.innerHTML = 100),
+		  document.body.classList.toggle("page-loaded"),
+		  setTimeout(function () {
+			document.querySelector("nav").style.visibility = "visible";
+		  }, 880))),
+	  (i.style.transition = "0.15s"),
+	  (i.style.width = t + "%");
+  }, 20);
+  
